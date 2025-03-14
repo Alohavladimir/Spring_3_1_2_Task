@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit User</title>
+</head>
+<body>
+<h1>Edit User</h1>
+<form th:action="@{/admin/save}" method="post" th:object="${user}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="hidden" th:field="*{id}">
+    <input type="email" th:field="*{email}" placeholder="Email" required>
+    <input type="text" th:field="*{fullName}" placeholder="Full Name" required>
+    <input type="number" th:field="*{age}" placeholder="Age" required>
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/admin}">Back to Admin Panel</a>
+</body>
+</html>

@@ -1,0 +1,25 @@
+package com.preproject.security.Spring.security.service;
+
+import com.preproject.security.Spring.security.model.Role;
+import com.preproject.security.Spring.security.repository.RoleRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RoleInitializer {
+    private final RoleRepository roleRepository;
+
+    public RoleInitializer(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
+    @PostConstruct
+    public void init() {
+        if (roleRepository.findByName("ROLE_USER").isEmpty()) {
+            roleRepository.save(new Role("ROLE_USER"));
+        }
+        if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
+            roleRepository.save(new Role("ROLE_ADMIN"));
+        }
+    }
+}
