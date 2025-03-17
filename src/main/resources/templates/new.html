@@ -4,6 +4,13 @@
     <title>New User</title>
 </head>
 <body>
+<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+    <span th:if="${#authentication}">
+        Logged as: <strong th:text="${#authentication.name}"></strong> |
+        Roles: <span th:each="role : ${#authentication.authorities}"
+                     th:text="${role} + ' '"></span>
+    </span>
+</div>
 <h1>Create New User</h1>
 <form th:action="@{/admin/save}" method="post">
     <input type="email" name="email" placeholder="Email" required>

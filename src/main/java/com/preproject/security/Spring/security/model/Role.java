@@ -1,10 +1,11 @@
 package com.preproject.security.Spring.security.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,6 +13,10 @@ public class Role {
 
     private String name; // "ROLE_ADMIN", "ROLE_USER"
 
+    @Override
+    public String getAuthority() {
+        return name; // Теперь роль сама является Authority
+    }
     public Long getId() {
         return id;
     }

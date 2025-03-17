@@ -4,6 +4,13 @@
     <title>Login</title>
 </head>
 <body>
+<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+    <span th:if="${#authentication}">
+        Logged as: <strong th:text="${#authentication.name}"></strong> |
+        Roles: <span th:each="role : ${#authentication.authorities}"
+                     th:text="${role} + ' '"></span>
+    </span>
+</div>
 <div th:if="${param.error}" style="color: red">Invalid email or password</div>
 <form th:action="@{/login}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

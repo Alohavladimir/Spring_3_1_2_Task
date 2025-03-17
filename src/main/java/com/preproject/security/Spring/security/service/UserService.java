@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -36,15 +38,10 @@ public class UserService {
 
         // Назначение роли ROLE_USER по умолчанию
     Role userRole = roleRepository.findByName("ROLE_USER")
-            .orElseThrow(() -> {
-                System.out.println("Роль ROLE_USER не найдена!");
-                return new RuntimeException("Role not found");
-            });
-    System.out.println("Роль найдена: " + userRole);
-
-        userRepository.save(user);
-    System.out.println("Пользователь сохранен: " + user);
-    }
+            .orElseThrow(() -> new RuntimeException("Role ROLE_USER not found"));
+    user.getRoles().add(userRole);
+    userRepository.save(user);
+}
 
 
     public List<User> getAllUsers() {
@@ -57,13 +54,18 @@ public class UserService {
     }
     @Transactional
     public void saveUser(User user) {
-        // Если пароль не изменен (уже хэширован), не хэшируем повторно
-        if (user.getPassword().startsWith("$2a$")) {
-            userRepository.save(user);
-        } else {
+        // Обновляем роли
+        Set<Role> managedRoles = user.getRoles().stream()
+                .map(role -> roleRepository.findById(role.getId()).orElseThrow())
+                .collect(Collectors.toSet());
+        user.setRoles(managedRoles);
+
+        // Хеширование пароля
+        if (!user.getPassword().startsWith("$2a$")) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
         }
+
+        userRepository.save(user);
     }
 @Transactional
     public void deleteUser(Long id) {

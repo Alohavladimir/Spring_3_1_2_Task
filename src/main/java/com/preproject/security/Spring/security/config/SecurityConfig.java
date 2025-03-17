@@ -36,14 +36,12 @@ public class SecurityConfig {
                                 "/js/**"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/success-login", true)
+                        .successHandler(successUserHandler())
                         .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
@@ -64,6 +62,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public SuccessUserHandler successUserHandler() {
+        return new SuccessUserHandler();
+    }
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

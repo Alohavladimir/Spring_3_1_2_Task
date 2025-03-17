@@ -102,9 +102,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .toList();
+        return roles; // Теперь возвращаем коллекцию Role, которые сами являются GrantedAuthority
     }
     @Override
     public boolean isAccountNonExpired() {

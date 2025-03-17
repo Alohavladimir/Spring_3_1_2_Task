@@ -6,6 +6,13 @@
 <body>
 <h1>Admin Panel</h1>
 
+<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+    <span th:if="${#authentication}">
+        Logged as: <strong th:text="${#authentication.name}"></strong> |
+        Roles: <span th:each="role : ${#authentication.authorities}"
+                     th:text="${role} + ' '"></span>
+    </span>
+</div>
 <!-- Кнопка создания пользователя -->
 <a th:href="@{/admin/new}"><button>New User</button></a>
 
@@ -21,6 +28,10 @@
         <td th:text="${user.fullName}"></td>
         <td th:text="${user.email}"></td>
         <td th:text="${user.age}"></td>
+        <td>
+            <span th:each="role : ${user.roles}"
+                  th:text="${role.name} + ' '"></span>
+        </td>
         <td>
             <a th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</a>
             <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a>

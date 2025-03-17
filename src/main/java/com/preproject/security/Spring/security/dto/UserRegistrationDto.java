@@ -3,12 +3,14 @@ package com.preproject.security.Spring.security.dto;
 import jakarta.validation.constraints.*;
 
 public class UserRegistrationDto {
-    @NotBlank(message = "Email не может быть пустым")
-    @Email(message = "Некорректный формат email")
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Пароль не может быть пустым")
-    @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
+            message = "Password must contain uppercase, lowercase and number")
     private String password;
 
     @NotBlank(message = "Имя не может быть пустым")
