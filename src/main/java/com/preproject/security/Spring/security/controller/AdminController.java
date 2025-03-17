@@ -56,6 +56,7 @@ public class AdminController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("allRoles", roleRepository.findAll()); // Добавляем список всех ролей
         return "edit";
     }
 

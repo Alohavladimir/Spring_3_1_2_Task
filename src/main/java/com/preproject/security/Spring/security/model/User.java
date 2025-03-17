@@ -1,6 +1,8 @@
 package com.preproject.security.Spring.security.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -87,6 +89,7 @@ public class User implements UserDetails {
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
+//    @LazyCollection(LazyCollectionOption.EXTRA)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
