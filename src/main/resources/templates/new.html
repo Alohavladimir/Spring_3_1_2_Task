@@ -19,6 +19,8 @@
     <input type="number" name="age" placeholder="Age" required>
     <button type="submit">Create</button>
 </form>
-<a th:href="@{/admin}">Back to Admin Panel</a>
+<br><br>
+<a th:href="@{/admin}" style="display: inline-block; padding: 8px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">Admin Panel</a><br><br>
+<div th:replace="~{logout :: logout}"></div>
 </body>
 </html>

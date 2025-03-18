@@ -1,17 +1,11 @@
 package com.preproject.security.Spring.security.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -89,7 +83,6 @@ public class User implements UserDetails {
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
-//    @LazyCollection(LazyCollectionOption.EXTRA)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -97,7 +90,6 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    // Реализация UserDetails
     @Override
     public String getUsername() {
         return email; // Используем email вместо username
@@ -105,26 +97,25 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles; // Теперь возвращаем коллекцию Role, которые сами являются GrantedAuthority
+        return roles;
     }
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Аккаунт не просрочен
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Аккаунт не заблокирован
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Пароль не просрочен
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Аккаунт включен
+        return true;
     }
-    // Остальные методы UserDetails (isAccountNonExpired и т.д.)
 }

@@ -27,6 +27,7 @@
     </div>
     <button type="submit">Save</button>
 </form>
-<a th:href="@{/admin}">Back to Admin Panel</a>
+<a th:href="@{/admin}" style="display: inline-block; padding: 8px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">Admin Panel</a>
+<div th:replace="~{logout :: logout}"></div>
 </body>
 </html>

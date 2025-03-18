@@ -5,8 +5,6 @@ import com.preproject.security.Spring.security.model.User;
 import com.preproject.security.Spring.security.repository.RoleRepository;
 import com.preproject.security.Spring.security.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 @Component
-@DependsOn("roleInitializer") // Добавляем зависимость от компонента с ролями
 public class DataInitializer {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;

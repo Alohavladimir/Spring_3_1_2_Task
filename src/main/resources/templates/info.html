@@ -11,7 +11,7 @@
                      th:text="${role} + ' '"></span>
     </span>
 </div>
-<h1>Your Profile</h1>
+<h1>User Info</h1>
 <table border="1">
     <tr>
         <th>Full Name</th>
@@ -36,13 +36,9 @@
 
 <!-- Для админа - кнопка возврата -->
 <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-    <a th:href="@{/admin}"><button>Back to Admin Panel</button></a>
+    <a th:href="@{/admin}" style="display: inline-block; padding: 8px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">Admin Panel</a>
 </div>
 
-<!-- Кнопка Logout -->
-<form th:action="@{/logout}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <button type="submit">Logout</button>
-</form>
+<div th:replace="~{logout :: logout}"></div>
 </body>
 </html>

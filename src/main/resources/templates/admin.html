@@ -38,11 +38,7 @@
         </td>
     </tr>
 </table>
-
-<!-- Кнопка Logout -->
-<form th:action="@{/logout}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <button type="submit">Logout</button>
-</form>
+<a th:href="@{/user/info}" style="display: inline-block; padding: 8px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">Info User</a>
+<div th:replace="~{logout :: logout}"></div>
 </body>
 </html>

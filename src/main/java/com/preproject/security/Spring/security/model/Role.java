@@ -11,17 +11,16 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name; // "ROLE_ADMIN", "ROLE_USER"
+    private String name;
 
     @Override
     public String getAuthority() {
-        return name; // Теперь роль сама является Authority
+        return name;
     }
     public Long getId() {
         return id;
     }
 
-    // Конструктор по умолчанию (обязателен для JPA)
     public Role() {
     }
 

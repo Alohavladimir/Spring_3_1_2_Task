@@ -1,14 +1,14 @@
 package com.preproject.security.Spring.security.controller;
 
 import com.preproject.security.Spring.security.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.preproject.security.Spring.security.service.UserService;
 
 import java.security.Principal;
 
-@Controller // Добавьте аннотацию @Controller
+@Controller
 public class AuthController {
     private final UserService userService;
 
@@ -26,8 +26,8 @@ public class AuthController {
         return "redirect:/user/info";
     }
 
-    @GetMapping("/access-denied")
-    public String handleAccessDenied() {
-        return "access-denied";
+    @GetMapping("/login")
+    public String showLoginForm(){
+        return "login";
     }
 }
