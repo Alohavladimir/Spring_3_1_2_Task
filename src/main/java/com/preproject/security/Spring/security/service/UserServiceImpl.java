@@ -1,7 +1,6 @@
 package com.preproject.security.Spring.security.service;
 
 import com.preproject.security.Spring.security.model.User;
-import com.preproject.security.Spring.security.repository.RoleRepository;
 import com.preproject.security.Spring.security.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,16 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
-
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -33,45 +29,17 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void saveUser(User user) {
-        if (user.getId() != null) {
-            User existingUser = userRepository.findById(user.getId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            // Копируем только НЕ парольные поля
-            existingUser.setEmail(user.getEmail());
-            existingUser.setFullName(user.getFullName());
-            existingUser.setAge(user.getAge());
-            existingUser.setRoles(user.getRoles());
-
-            userRepository.save(existingUser);
-        } else {
+        if (user.getId() == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
         }
+        userRepository.save(user);
     }
 
-//        if (user.getId() != null) {
-//            User existingUser = userRepository.findById(user.getId())
-//                    .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//            // Обновляем только необходимые поля
-//            existingUser.setEmail(user.getEmail());
-//            existingUser.setFullName(user.getFullName());
-//            existingUser.setAge(user.getAge());
-//            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-//            existingUser.setRoles(user.getRoles());
-//
-//            userRepository.save(existingUser);
-//        } else {
-//            // Обработка создания нового пользователя
-//            user.setPassword(passwordEncoder.encode(user.getPassword()));
-//            userRepository.save(user);
-//        }
-
-@Transactional
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

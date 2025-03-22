@@ -6,23 +6,24 @@ import com.preproject.security.Spring.security.repository.RoleRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserManagementService {
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserManagementService(UserService userService, RoleRepository roleRepository) {
+    public UserManagementService(UserService userService, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // Создание пользователя с ролями
+    //устанавливает роли пользователю
+    //если нет роли при создании пользователя -> назначается ROLE_USER
     public void createUserWithRoles(User user, List<Long> roleIds) {
         setUserRoles(user, roleIds);
-
-        // Добавляем роль USER по умолчанию, если роли не выбраны
         if (user.getRoles().isEmpty()) {
             Role defaultRole = roleRepository.findByName("ROLE_USER")
                     .orElseThrow(() -> new RuntimeException("Role ROLE_USER not found"));
@@ -31,45 +32,52 @@ public class UserManagementService {
         userService.saveUser(user);
     }
 
-    // Обновление пользователя с ролями
-    public void updateUserWithRoles(Long userId, User updatedUser, List<Long> roleIds, String currentUserEmail) {
+    //обновляет данные пользователя, включая роли и пароль
+    //проверяет, не пытается ли пользователь редактировать самого себя
+    public void updateUserWithRoles(Long userId, User updatedUser, List<Long> roleIds, String newPassword, String currentUserEmail) {
         User existingUser = userService.getUserById(userId);
-
-        // Проверка на редактирование самого себя
         if (existingUser.getEmail().equals(currentUserEmail)) {
             throw new AccessDeniedException("You can't edit your own account");
         }
+        if (newPassword != null && !newPassword.isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
+        }
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setFullName(updatedUser.getFullName());
+        existingUser.setAge(updatedUser.getAge());
+        setUserRoles(existingUser, roleIds);
 
-        setUserRoles(updatedUser, roleIds);
-        userService.saveUser(updatedUser);
+        userService.saveUser(existingUser);
     }
 
-    // Установка ролей
+
+    //связывает пользователя с его ролями при создании
     private void setUserRoles(User user, List<Long> roleIds) {
         Set<Role> roles = new HashSet<>();
+
+        // Если есть ID ролей, преобразуем их в объекты Role
         if (roleIds != null && !roleIds.isEmpty()) {
-            roles = roleIds.stream()
-                    .map(roleId -> roleRepository.findById(roleId)
-                            .orElseThrow(() -> new RuntimeException("Role not found")))
-                    .collect(Collectors.toSet());
+            for (Long roleId : roleIds) {
+                Role role = roleRepository.findById(roleId)
+                        .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleId));
+                roles.add(role);
+            }
         }
         user.setRoles(roles);
     }
+
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    // Получение всех ролей
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
-    // Получение пользователя по ID
     public User getUserById(Long id) {
         return userService.getUserById(id);
     }
 
-    // Удаление пользователя
     public void deleteUser(Long id) {
         userService.deleteUser(id);
     }

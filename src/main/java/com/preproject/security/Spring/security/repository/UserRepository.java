@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    //запрос нужен для LAZY загрузки данных
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
 
-    @EntityGraph(attributePaths = {"roles"}) // Загружаем роли автоматически
+    //загружаем роли автоматически
+    @EntityGraph(attributePaths = {"roles"})
     @Override
     List<User> findAll();
 }
