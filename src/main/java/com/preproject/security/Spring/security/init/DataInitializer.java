@@ -32,7 +32,8 @@ public class DataInitializer {
         // Проверяем наличие роли ADMIN
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                 .orElseThrow(() -> new IllegalStateException("ROLE_ADMIN must be created by RoleInitializer!"));
-
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new IllegalStateException("ROLE_USER must be created by RoleInitializer!"));
         // Создаем администратора, если его нет
         if (!userRepository.existsByEmail("admin@example.com")) {
             User admin = new User();
@@ -40,7 +41,7 @@ public class DataInitializer {
             admin.setPassword(encoder.encode("admin"));
             admin.setFullName("Admin");
             admin.setAge(30);
-            admin.setRoles(Set.of(adminRole));
+            admin.setRoles(Set.of(adminRole,userRole));
             userRepository.save(admin);
         }
     }

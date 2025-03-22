@@ -30,24 +30,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
     @Transactional
     public void saveUser(User user) {
-            // Упрощаем метод: только сохранение без бизнес-логики
-            if (user.getId() == null) {
-                // Новый пользователь: шифруем пароль
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-            } else {
-                // Обновление: проверяем, изменился ли пароль
-                User existingUser = userRepository.findById(user.getId())
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getId() != null) {
+            User existingUser = userRepository.findById(user.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-                if (!user.getPassword().equals(existingUser.getPassword())) {
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
-                }
-            }
+            // Копируем только НЕ парольные поля
+            existingUser.setEmail(user.getEmail());
+            existingUser.setFullName(user.getFullName());
+            existingUser.setAge(user.getAge());
+            existingUser.setRoles(user.getRoles());
 
+            userRepository.save(existingUser);
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
+    }
 
 //        if (user.getId() != null) {
 //            User existingUser = userRepository.findById(user.getId())

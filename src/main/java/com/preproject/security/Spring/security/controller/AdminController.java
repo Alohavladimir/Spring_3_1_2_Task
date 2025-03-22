@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.preproject.security.Spring.security.service.UserServiceImpl;
+
 
 import java.security.Principal;
 import java.util.List;
@@ -58,16 +58,25 @@ public class AdminController {
     @PostMapping("/edit/{id}")
     public String updateUser(
             @PathVariable Long id,
-            @ModelAttribute User user,
+            @ModelAttribute User userFromForm, // Переименуем для ясности
             @RequestParam(value = "roleIds", required = false) List<Long> roleIds,
-            Principal principal, String newPassword) {
+            @RequestParam(value = "newPassword", required = false) String newPassword,
+            Principal principal) {
+
         User existingUser = userManagementService.getUserById(id);
+
+        // Обновляем пароль только если указан новый
         if (newPassword != null && !newPassword.isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(newPassword));
         }
 
+        // Копируем только НЕ парольные поля из формы
+        existingUser.setEmail(userFromForm.getEmail());
+        existingUser.setFullName(userFromForm.getFullName());
+        existingUser.setAge(userFromForm.getAge());
+        existingUser.setRoles(userFromForm.getRoles());
 
-        userManagementService.updateUserWithRoles(id, user, roleIds, principal.getName());
+        userManagementService.updateUserWithRoles(id, existingUser, roleIds, principal.getName());
         return "redirect:/admin";
     }
 

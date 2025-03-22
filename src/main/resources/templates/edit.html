@@ -23,7 +23,7 @@
     <div th:unless="${user.password == null}">
         <small>Оставьте поле пароля пустым, если не хотите менять пароль</small>
     </div>
-    <input type="password" th:field="*{password}" placeholder="Password">
+    <input type="password" name="newPassword" placeholder="New Password (leave blank to keep current)">
 
     <h3>Roles:</h3>
     <div th:each="role : ${allRoles}">
