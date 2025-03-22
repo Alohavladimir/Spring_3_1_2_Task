@@ -32,24 +32,41 @@ public class UserServiceImpl implements UserService {
     }
     @Transactional
     public void saveUser(User user) {
-        if (user.getId() != null) {
-            User existingUser = userRepository.findById(user.getId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            // Упрощаем метод: только сохранение без бизнес-логики
+            if (user.getId() == null) {
+                // Новый пользователь: шифруем пароль
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            } else {
+                // Обновление: проверяем, изменился ли пароль
+                User existingUser = userRepository.findById(user.getId())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Обновляем только необходимые поля
-            existingUser.setEmail(user.getEmail());
-            existingUser.setFullName(user.getFullName());
-            existingUser.setAge(user.getAge());
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-            existingUser.setRoles(user.getRoles());
+                if (!user.getPassword().equals(existingUser.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                }
+            }
 
-            userRepository.save(existingUser);
-        } else {
-            // Обработка создания нового пользователя
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
-    }
+
+//        if (user.getId() != null) {
+//            User existingUser = userRepository.findById(user.getId())
+//                    .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//            // Обновляем только необходимые поля
+//            existingUser.setEmail(user.getEmail());
+//            existingUser.setFullName(user.getFullName());
+//            existingUser.setAge(user.getAge());
+//            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+//            existingUser.setRoles(user.getRoles());
+//
+//            userRepository.save(existingUser);
+//        } else {
+//            // Обработка создания нового пользователя
+//            user.setPassword(passwordEncoder.encode(user.getPassword()));
+//            userRepository.save(user);
+//        }
+
 @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
