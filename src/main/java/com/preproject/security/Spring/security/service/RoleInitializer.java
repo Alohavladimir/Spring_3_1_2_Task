@@ -21,11 +21,8 @@ public class RoleInitializer {
     }
 
     public void createRoleIfNotExists(String name) {
-        if (roleRepository.findByName("ROLE_USER").isEmpty()) {
-            roleRepository.save(new Role("ROLE_USER"));
-        }
-        if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
-            roleRepository.save(new Role("ROLE_ADMIN"));
+        if (roleRepository.findByName(name).isEmpty()) { // Используем параметр name
+            roleRepository.save(new Role(name));
         }
     }
 }

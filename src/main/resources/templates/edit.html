@@ -17,7 +17,8 @@
     <input type="hidden" th:field="*{id}">
     <input type="email" th:field="*{email}" placeholder="Email" required>
     <input type="text" th:field="*{fullName}" placeholder="Full Name" required>
-    <input type="number" th:field="*{age}" placeholder="Age" required>
+    <input type="number" th:field="*{age}" placeholder="Agffe" required>
+    <input type="password" th:field="*{password}" placeholder="Password">
     <div th:each="role : ${allRoles}">
         <input type="radio"
                th:field="*{roles}"

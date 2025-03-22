@@ -4,22 +4,20 @@ import com.preproject.security.Spring.security.model.Role;
 import com.preproject.security.Spring.security.model.User;
 import com.preproject.security.Spring.security.repository.RoleRepository;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.preproject.security.Spring.security.service.UserService;
+import com.preproject.security.Spring.security.service.UserServiceImpl;
 
 import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final RoleRepository roleRepository;
 
-    public AdminController(UserService userService, RoleRepository roleRepository) {
+    public AdminController(UserServiceImpl userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
     }
@@ -37,7 +35,6 @@ public class AdminController {
     }
 
     @PostMapping("/save")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String saveUser(@ModelAttribute User user, Principal principal) {
         // Запрет редактирования самого себя
         if (user.getEmail().equals(principal.getName())) {

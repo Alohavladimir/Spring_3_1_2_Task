@@ -4,15 +4,15 @@ import com.preproject.security.Spring.security.model.User;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.preproject.security.Spring.security.service.UserService;
+import com.preproject.security.Spring.security.service.UserServiceImpl;
 
 import java.security.Principal;
 
 @Controller
 public class AuthController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserServiceImpl userService) {
         this.userService = userService;
     }
 

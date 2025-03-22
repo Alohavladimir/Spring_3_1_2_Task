@@ -5,12 +5,13 @@ import com.preproject.security.Spring.security.model.User;
 import com.preproject.security.Spring.security.repository.RoleRepository;
 import com.preproject.security.Spring.security.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
-
+@DependsOn("roleInitializer")
 @Component
 public class DataInitializer {
     private final UserRepository userRepository;
