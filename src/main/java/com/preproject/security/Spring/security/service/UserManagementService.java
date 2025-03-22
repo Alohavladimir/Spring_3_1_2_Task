@@ -65,21 +65,8 @@ public class UserManagementService {
         }
         user.setRoles(roles);
     }
-
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
-    }
-
-    public User getUserById(Long id) {
-        return userService.getUserById(id);
-    }
-
-    public void deleteUser(Long id) {
-        userService.deleteUser(id);
     }
 }
 

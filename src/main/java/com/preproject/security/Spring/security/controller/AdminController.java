@@ -3,6 +3,7 @@ package com.preproject.security.Spring.security.controller;
 import com.preproject.security.Spring.security.model.Role;
 import com.preproject.security.Spring.security.model.User;
 import com.preproject.security.Spring.security.service.UserManagementService;
+import com.preproject.security.Spring.security.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +19,11 @@ public class AdminController {
 
     private static final String REDIRECT_ADMIN = "redirect:/admin";
     private final UserManagementService userManagementService;
+    private final UserService userService;
 
-    public AdminController(UserManagementService userManagementService) {
+    public AdminController(UserManagementService userManagementService, UserService userService) {
         this.userManagementService = userManagementService;
+        this.userService = userService;
     }
 
     @ModelAttribute("allRoles")
@@ -30,7 +33,7 @@ public class AdminController {
 
     @GetMapping
     public String adminPanel(Model model) {
-        model.addAttribute("users", userManagementService.getAllUsers());
+        model.addAttribute("users", userService.getAllUsers());
         return "admin";
     }
 
@@ -49,7 +52,7 @@ public class AdminController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("user", userManagementService.getUserById(id));
+        model.addAttribute("user", userService.getUserById(id));
         return "edit";
     }
 
@@ -66,7 +69,7 @@ public class AdminController {
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
-        userManagementService.deleteUser(id);
+        userService.deleteUser(id);
         return REDIRECT_ADMIN;
     }
 }
